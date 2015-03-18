@@ -1,6 +1,9 @@
 (function() {
   'use strict';
 
+  /* ---------------------------------------------------------------------------
+   * Define Yelp API Factories and Services for app.api module.
+   * -------------------------------------------------------------------------*/
   angular
     .module('app.api')
     /**
@@ -14,67 +17,102 @@
      */
     .service('YelpSearchResultService', processSearchResults);
 
-    // TODO: Check func doc
-    /* @ngInject */
-    /**
-     * Client API call to server for yelp restaurant search results.
-     * @param $resource
-     * @returns {*}
-     */
-    function search($resource) {
-      return $resource('/api/yelp/search/:terms/:location', {}, {
-        search: {
-          method: 'GET',
-          isArray: false
-        }
-      })
-    }
+  /* ---------------------------------------------------------------------------
+   * Factory functions
+   * -------------------------------------------------------------------------*/
 
-    // TODO: Check func doc
-    /**
-     * Process the search results from the Yelp Restaurant search API call.
-     *
-     * Also makes a subsequent call to the SODA API to get the food inspection
-     * results for each restaurant returned.
-     *
-     * @param YelpRestaurantSearchFactory
-     */
-    function processSearchResults(YelpRestaurantSearchFactory, SocrataRestaurantResultService) {
-      this.getResults = function(terms, location, callback) {
-        console.log('here', terms, location);
-
-        // Final processed array of restaurants.
-        var processedRestaurants = [];
-
-        /* Utility Functions fo this Service. */
-        var addInspectionInfo = function(isValid, restaurant) {
-          processedRestaurants.push(restaurant);
-        }
-
-        var getInspectionResults = function(response) {
-          var yelpResults = response.businesses;
-
-          yelpResults.forEach(function(restaurant, index, array) {
-            console.log(restaurant);
-            SocrataRestaurantResultService.getResults(restaurant.phone, restaurant, addInspectionInfo); //.$promise;
-          });
-        }
-
-
-        var onSuccess = function(response) {
-          //console.log(response);
-          callback(true, processedRestaurants);
-        };
-
-        var onError = function(error) {
-          callback(false, error);
-        };
-
-        YelpRestaurantSearchFactory.search({terms: terms, location: location})
-          .$promise
-          .then(getInspectionResults)
-          .then(onSuccess)
-          .catch(onError);
+  /**
+   * Client API call to server for Yelp restaurant search results.
+   * @param $resource
+   * @returns {*}
+   */
+  function search($resource) {
+    return $resource('/api/yelp/search/:terms/:location', {}, {
+      search: {
+        method: 'GET',
+        isArray: false
       }
+    })
+  }
+
+  /* ---------------------------------------------------------------------------
+   * Service functions
+   * -------------------------------------------------------------------------*/
+
+  /**
+   * Process the search results from the Yelp Restaurant search API call.
+   *
+   * Also makes a subsequent call to the SODA API to get the food inspection
+   * results for each restaurant returned.
+   *
+   * @param YelpRestaurantSearchFactory
+   */
+  function processSearchResults(YelpRestaurantSearchFactory, SocrataRestaurantResultService) {
+    /**
+     * Service getResults function().
+     *
+     * @param terms
+     *  Terms can have spaces
+     * @param location
+     *  Location is a string
+     * @param callback
+     */
+    this.getResults = function(terms, location, callback) {
+      // Final processed array of restaurants.
+      var processedRestaurants = [];
+
+      /* Utility Functions fo this Service. */
+
+      /**
+       * Callback function for SODA API call.
+       *
+       * @param isValid
+       * @param restaurant
+       */
+      var addInspectionInfo = function(isValid, restaurant) {
+        // TODO: Handle isValid.
+        processedRestaurants.push(restaurant);
+      }
+
+      /**
+       * Get Inspection results from SODA API for each restaurant returned from
+       * the Yelp Search factory call.
+       *
+       * @param response
+       */
+      var getInspectionResults = function(response) {
+        var yelpResults = response.businesses;
+
+        yelpResults.forEach(function(restaurant, index, array) {
+          SocrataRestaurantResultService.getResults(restaurant.phone, restaurant, addInspectionInfo); //.$promise;
+        });
+      }
+
+      /**
+       * Success callback function for YelpRestaurantSearchFactory.search().
+       *
+       * @param response
+       */
+      var onSuccess = function(response) {
+        callback(true, processedRestaurants);
+      };
+
+      /**
+       * Error callback function for YelpRestaurantSearchFactory.search().
+       *
+       * @param error
+       */
+      var onError = function(error) {
+        // TODO: error handling.
+        callback(false, error);
+      };
+
+      // Start our Search!
+      YelpRestaurantSearchFactory.search({terms: terms, location: location})
+        .$promise
+        .then(getInspectionResults)
+        .then(onSuccess)
+        .catch(onError);
     }
+  }
 })();

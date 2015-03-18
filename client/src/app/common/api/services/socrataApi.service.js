@@ -1,6 +1,9 @@
 (function() {
   'use strict';
 
+  /* ---------------------------------------------------------------------------
+   * Define Socrata API Factories and Services for app.api module.
+   * -------------------------------------------------------------------------*/
   angular
     .module('app.api')
 
@@ -27,10 +30,13 @@
      */
     .service('SocrataListResultService', processListResults);
 
-    // TODO: Check func doc
-    /* @ngInject */
+  /* ---------------------------------------------------------------------------
+   * Factory functions
+   * -------------------------------------------------------------------------*/
     /**
-     * Client API call to server for SODA food inspection results for a restaurant.
+     * Client API call to server for SODA food inspection results for a
+     * restaurant.
+     *
      * @param $resource
      * @returns {*}
      */
@@ -58,19 +64,33 @@
       })
     }
 
-  // TODO: Check func doc
+  /* ---------------------------------------------------------------------------
+   * Service functions
+   * -------------------------------------------------------------------------*/
+
   /**
    * Process the inspection results from the SODA API call.
    *
    * @param SocrataRestaurants
    */
   function processInspectionResults(SocrataRestaurants) {
+    /**
+     * Service getResults function().
+     *
+     * @param phone
+     * @param restaurant
+     *  Restaurant object
+     * @param callback
+     */
     this.getResults = function(phone, restaurant, callback) {
-      console.log('here', phone);
 
+      /**
+       * Success callback function for SocrataRestaurants.search().
+       *
+       * @param response
+       */
       var onSuccess = function(response) {
-        console.log(response);
-
+        // Parse inspection dates for each inspection.
         response.forEach(function(inspection, index, array) {
           if (inspection.hasOwnProperty("inspection_date")) {
             inspection.inspection_date = Date.parse(inspection.inspection_date);
@@ -82,23 +102,35 @@
         callback(true, restaurant);
       };
 
+      /**
+       * Error callback function for SocrataRestaurants.search().
+       *
+       * @param error
+       */
       var onError = function(error) {
+        // TODO: Handle error.
         callback(false, error);
       };
 
+      // Get inspection data for the restaurant.
       SocrataRestaurants.search({ phone: phone })
         .$promise
         .then(onSuccess, onError);
     }
   }
 
+  /**
+   * Process the restaurant results returned from SODA SocrataList factory call.
+   *
+   * @param SocrataList
+   */
   function processListResults(SocrataList) {
     this.getList = function(zip, returnTopRestaurants, callback) {
-      console.log('processListResults', zip, returnTopRestaurants);
-
+      /**
+       * Success callback function for SocrataList.getlistInspectionResults().
+       * @param response
+       */
       var onSuccess = function(response) {
-        console.log(response);
-
         // Set min_score and max_score to just score.
         response.forEach(function(restaurant, index, array) {
           if (restaurant.hasOwnProperty("min_score")) {
@@ -113,10 +145,16 @@
         callback(true, response);
       };
 
+      /**
+       * Error callback function for SocrataList.getlistInspectionResults().
+       *
+       * @param error
+       */
       var onError = function(error) {
         callback(false, error);
       };
 
+      // Get the lists!
       SocrataList.getlistInspectionResults({ zip: zip, best: returnTopRestaurants })
         .$promise
         .then(onSuccess, onError);

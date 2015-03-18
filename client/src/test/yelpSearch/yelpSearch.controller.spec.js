@@ -212,7 +212,7 @@ describe('app.yelp', function(){
 
   describe('Yelp Controller: search()', function() {
     beforeEach(inject(function($injector, $rootScope, $controller, _$httpBackend_) {
-      $httpBackend = _$httpBackend_;//$injector.get("$httpBackend");
+      $httpBackend = _$httpBackend_;
       $httpBackend
         .when("GET", "/api/yelp/search/taco/11216")
         .respond(200, sampleRestaurantData);
