@@ -1,0 +1,34 @@
+<div>
+  <p><i class="fa fa-exclamation-triangle"></i> {{ inspection.inspection_date | date:'M/dd/yyyy' }}</p>
+
+  <p><i title="About the Grades"
+        data-content-template="app/yelp/partials/_gradeInfo.html"
+        data-placement="right"
+        data-auto-close="true"
+        bs-popover
+        class='fa fa-key'></i>
+    <strong>Grade:</strong> {{ inspection.grade }}
+  </p>
+
+  <p>
+    <i title="About the Critical flag"
+       data-content="Critical violations are those most likely to contribute to foodborne illness."
+       data-placement="right"
+       data-auto-close="true"
+       bs-popover
+       class='fa fa-question'></i>
+    {{ inspection.critical_flag }}
+  </p>
+
+  <p>
+    <i title="About the Score"
+       data-content-template="app/yelp/partials/_scoreInfo.html"
+       data-placement="right"
+       data-auto-close="true"
+       bs-popover
+       class='fa fa-info'></i>
+    <strong>Score:</strong> {{ inspection.score }}
+  </p>
+
+  <p><strong>Violation Description:</strong> <span class="text-danger">{{ inspection.violation_description }}</span></p>
+</div>

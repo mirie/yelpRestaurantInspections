@@ -1,0 +1,42 @@
+<div class="panel-heading">
+  <h4 class="panel-title">
+    <div bs-collapse-toggle ng-click="restaurant.isCollapsed = !restaurant.isCollapsed">
+      <i class="fa fa-lg" ng-class="{ 'fa-caret-right':!restaurant.isCollapsed, 'fa-caret-down':restaurant.isCollapsed }"></i>
+      {{ restaurant.name }}
+      <div class="name-rating">
+        <img ng-src="{{ restaurant.rating_img_url }}" alt="{{ restaurant.rating }} / 5" /> <small>( {{ restaurant.review_count }} )</small> vs.
+        <span class="badge inspections" ng-class="{ 'moderate': !restaurant.inspections.length }">{{ restaurant.inspections.length }} Last Dirty Inspections</span>
+      </div>
+    </div>
+  </h4>
+</div>
+<div class="panel-collapse" bs-collapse-target>
+  <div class="panel-body">
+    <p>Yelp URL: <a href="{{ restaurant.url }}">{{ restaurant.url }}</a></p>
+
+    <address>
+      <strong>Address</strong><br>
+      <p ng-repeat="line in restaurant.location.display_address">{{ line }}</p>
+      <abbr title="Phone">P:</abbr> {{ restaurant.display_phone }}
+    </address>
+
+    <p>Categories:</p>
+    <ul class="list-inline">
+      <li ng-repeat="category in restaurant.categories">{{ category[0] }}</li>
+    </ul>
+
+    <div class="panel panel-default">
+      <div class="panel-heading"><h3>Last {{ restaurant.inspections.length }} Inspections:</h3></div>
+      <div class="panel-body">
+        <div ng-show="restaurant.inspections.length == 0">
+          <i class="fa fa-exclamation-circle"></i> No results returned <i class="fa fa-meh-o fa-lg"></i>
+        </div>
+
+        <ul class="list-group" ng-repeat="inspection in restaurant.inspections">
+          <li class="list-group-item" inspection-details inspection="inspection"></li>
+        </ul>
+
+      </div>
+    </div>
+  </div>
+</div>

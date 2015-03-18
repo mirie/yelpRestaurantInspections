@@ -1,0 +1,98 @@
+<div class="container">
+  <div class="page-header">
+    <h1><i class="fa fa-info"></i> About Restaurant Inspection Data from NYC Open Data</h1>
+    <small>Text from <a href="https://data.cityofnewyork.us/Health/DOHMH-New-York-City-Restaurant-Inspection-Results/xx67-kt59/about">DOHMH New York City Restaurant Inspection Results</a></small>
+  </div>
+
+  <div class="panel panel-info">
+    <div class="panel-heading">
+      <h2 class="panel-title">Introductory Note:</h2>
+    </div>
+    <div class="panel-body">
+      This dataset differs from previously available restaurant inspection data in that administrative and other unscored violations are included.  We have also added fields that describe INSPECTION TYPE and GRADE associated with historical inspections. Three fields are soon to be added as data logic becomes available to populate them accurately. Those fields are VIOLATION POINTS (the points assigned to a violation before or after adjudication, depending on whether adjudication has occurred), FINES TOTAL (the fine amount after adjudication), and DECISION DATE (adjudication date – or date a grade becomes final). The analytic guidance provided in this document represents the very minimum of what needs to be understood to properly use and interpret the restaurant inspection data. Please read this document in its entirety before using the data.
+    </div>
+  </div>
+
+  <h3>About the Records in the Dataset</h3>
+
+  <p>The dataset contains every sustained or not yet adjudicated violation citation from every full or special program inspection conducted up to three years prior to the most recent inspection for restaurants and college cafeterias in an active status on the RECORD DATE (date of the data pull). When an inspection results in more than one violation, values for associated fields are repeated for each additional violation record.  Establishments are uniquely identified by their CAMIS (record ID) number. Keep in mind that restaurants go in and out of business; only restaurants in an active status are included in the dataset.</p>
+  <p>Records are also included for each restaurant that has applied for a permit but has not yet been inspected and for inspections resulting in no violations. Establishments with inspection date of 1/1/1900 are new establishments that have not yet received a full inspection. Restaurants that received no violations are represented by a single row and coded as having no violations using the ACTION field.</p>
+  <p>Because this dataset is compiled from several large administrative data systems, it contains some illogical values that could be a result of data entry or transfer errors. Data may also be missing.</p>
+  <p>This dataset and the information on the DOHMH Restaurant Grading website come from the same data source.  The DOHMH Restaurant Grading website is here: (http://www.nyc.gov/html/doh/html/services/restaurant-inspection.shtml)</p>
+  <p>See the data dictionary file in the Attachments section of the OpenData website for a summary of data fields and allowable values.</p>
+
+  <h3>Understanding the Letter Grading Program</h3>
+  <p>The analyst must be familiar with the NYC restaurant letter grading program to be able to analyze this dataset correctly.  Background on how the program works can be found on the DOHMH website:</p>
+  <p>http://www.nyc.gov/html/doh/html/environmental/food-service.shtml</p>
+  <p>In brief, restaurant letter grading began July 27, 2010. The program allows for dual inspections, providing an opportunity for restaurants to improve before being graded.  An initial inspection is followed by a re-inspection no less than 7 days later for restaurants that don’t receive an “A” grade on their initial inspection.</p>
+  <ul>
+    <li>A score of less than 14 points on either initial or re-inspection results in an “A” grade</li>
+    <li>On re-inspection, a score of 14-27 points means a restaurant receives both a “B” grade and a “Grade Pending” card</li>
+    <li>On re-inspection, a score of 28 or more points means a restaurant receives both a “C” grade and a “Grade Pending” card</li>
+    <li>When critical violations have not been corrected on re-inspection, a restaurant may receive an additional compliance inspection within one to two weeks, but these inspections do not contribute to a grade.</li>
+  </ul>
+
+  <p>The restaurant is instructed to post the grade card or the grade pending card, but some restaurants may post both. Adjudication of a notice of violation at the Health Tribunal may result in a grade change and the issuance of a new grade card. Depending on the result of adjudication, as of the decision date, a restaurant must post the grade card issued at the time of the inspection – if violations were sustained, or it must post the new grade determined by the Tribunal.  Once the restaurant has had a hearing or has settled, a grade is considered post-adjudicated. The next inspection cycle is determined by the higher of the initial and re-inspection scores.  If the initial score is less than 14 points, the next initial inspection occurs approximately 12 months later; if the higher of the scores is 14-27 points, the next initial will be approximately 6 months after re-inspection; if the higher score is 28 or more points, the next initial inspection will occur approximately 4 months after re-inspection. If a restaurant is closed as the result of an inspection, the next initial inspection is typically around three months from the date the restaurant is allowed to reopen.</p>
+  <p>If a restaurant is closed on inspection, the process is a little different.</p>
+  <p>If a restaurant is closed on a re-inspection, it will get a reopening inspection before it is allowed to resume operations. The reopening inspection is not a gradable inspection and therefore the score will not determine the grade for the inspection cycle. If the restaurant passes the reopening inspection, the CURRENT GRADE field will be based on the higher of the initial or re-inspection score the restaurant received before it was closed.</p>
+  <p>If a restaurant is closed on an initial inspection, it will get a reopening inspection before it is allowed to resume operations. The reopening inspection is not a gradable inspection and therefore the score will not determine the grade for the inspection cycle. If the restaurant passes the reopening inspection, the previously posted grade card is taken down and it is given a “Grade Pending” card until a re-inspection determines the next grade.</p>
+
+  <h4>IMPORTANT NOTE: CHANGES IN THE INSPECTION PROGRAM OVER TIME:</h4>
+  <ul>
+    <li>Inspections were scored in a non-comparable way prior to letter grading, and there were no comparable “re-inspections” prior to letter grading.</li>
+    <li>Restaurants that received “A” grades on their initial or re-inspection no longer received fines for any sanitary violations cited during the inspection as of Jan. 19, 2011. Post-adjudicated initial scores are therefore likely to be higher, on average, after this date, since there was less of an incentive to adjudicate scores less than 14 points.</li>
+  </ul>
+
+  <h3>Identifying Gradable Inspections</h3>
+  <p>Not every inspection is a “gradable” inspection. Gradable inspections can be identified when the following statements are true:</p>
+  <p>INSPECTION TYPE in (Cycle Inspection/Initial Inspection, Cycle Inspection/Re-Inspection, Pre-Permit (Operational)/Initial Inspection, Pre-Permit (Operational)/Re-Inspection)</p>
+  <p>ACTION in (Violations were cited in the following area(s), No violations were recorded at the time of this inspection, Establishment Closed by DOHMH)</p>
+  <p>INSPECTION DATE > July 26, 2010</p>
+  <p>Although this logic will identify gradable inspections, grades associated with a closing inspection are not assigned until the reopening inspection. For this reason, the score and assigned grade on a reopening inspection are not always consistent.</p>
+
+  <h4>EXAMPLE 1:</h4>
+  <div>
+    <table class="table">
+      <thead>
+      <tr>
+        <td>CAMIS</td>
+        <td>INSPECTION DATE</td>
+        <td>ACTION</td>
+        <td>SCORE</td>
+        <td>GRADE</td>
+        <td>INSPECTION TYPE</td>
+      </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>40377630</td>
+          <td>1/17/2014</td>
+          <td>Establishment Closed by DOHMH.  Violations were cited in the following area(s) and those requiring immediate action were addressed.</td>
+          <td>43</td>
+          <td></td>
+          <td>Cycle Inspection / Re-inspection</td>
+        </tr>
+        <tr>
+          <td>40377630</td>
+          <td>1/21/2014</td>
+          <td>Establishment re-opened by DOHMH</td>
+          <td>2</td>
+          <td>C</td>
+          <td>Cycle Inspection / Reopening Inspection</td>
+        </tr>
+      </tbody>
+    </table>
+
+
+  </div>
+
+  <p>Non-gradable inspections are also performed to enforce Special Programs, such as calorie labeling and trans fat rules and the Smoke Free Air Act, or they may be performed for other reasons, such as when a restaurant is ready to reopen after a closing. Some of these inspections are conducted when a restaurant has not yet started or resumed operations, and these non-operational inspections tend to receive lower scores since the restaurant is not in operation during the inspection.</p>
+  <p>Special Program and Administrative violations (including violation codes 15 - 22) do not contribute towards SCORE and do not contribute towards determining GRADE. Compliance inspections are scored but do not contribute towards determining GRADE.</p>
+
+  <h3>Understanding Adjudication</h3>
+  <p>The SCORE field contains post-adjudicated data when adjudication has occurred as of the RECORD DATE; data are pre-adjudicated when a restaurant is still waiting for adjudication as of this date. Note that some restaurants do not seek adjudication; they post the grade they are given at the time of inspection. If a restaurant receives a pre-adjudicated B or C grade on re-inspection, the Open Data dataset cannot distinguish whether that restaurant is posting the B or C grade, or – alternatively – the Grade Pending card that is simultaneously given.</p>
+  <p>Note that if a violation is dismissed on adjudication, it is removed from the dataset. Thus, over time, some violations will be removed in subsequent iterations of the dataset.</p>
+
+  <h4>DISCREPANCIES BETWEEN SCORES AND GRADES</h4>
+  <p>The SCORE and GRADE fields may be inconsistent with each other because of limitations or errors in the data systems. That is to say, scores of 0-13, 14-27 and 28+ are not always accompanied by A, B and C grades, respectively, when they should be. There may also be cases where a grade card was given out but a record of that grade issuance is missing from the data system, and therefore missing from this dataset, even though the SCORE field is populated.  Note that when initial inspections are adjudicated down to the A range, the absence of an accompanying grade associated with that inspection is correct, because the grade would not be assigned until the re-inspection is performed.</p>
+</div>

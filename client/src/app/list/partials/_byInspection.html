@@ -1,0 +1,60 @@
+
+<div class="container">
+  <h1><i class="fa fa-cutlery"></i> Top 50 Perfect & Worst Restaurants by Zip Code</h1><br>
+  <p class="lead">See the Cleanest and Dirtiest Restaurants in the city by zip code.</p>
+
+  <div id="filter-form">
+    <div class="panel panel-default">
+      <div class="panel-body">
+
+        <form class="form-horizontal">
+          <div class="form-group">
+            <label for="inputZip" class="col-sm-2 control-label">Zip Code</label>
+            <div class="col-sm-10">
+              <input id="inputZip" type="text" class="form-control input-lg"
+                 placeholder="Filter by zip code"
+                 ng-model="list.filterForm.zip">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+              <button type="submit" class="btn btn-primary btn-lg" ng-click="list.filter()">Get Lists</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading Spinner -->
+  <div ng-show="list.loading" class="text-center"><i class="fa fa-spinner fa-spin fa-3x"></i></div>
+
+  <!--Restaurant Inspection Results -->
+  <div id="restaurant-list">
+    <div class="panel panel-success" ng-show="list.topRestaurants.length > 0">
+      <div class="panel-heading"><i class="fa fa-diamond"></i> Cleanest Restaurants</div>
+      <div class="panel-body">
+        <p><small>(Score) Restaurant Name</small></p>
+        <ul class="list-group">
+          <li class="list-group-item" ng-repeat="restaurant in list.topRestaurants | orderBy : 'score'">
+            <div restaurant-item restaurant="restaurant"></div>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="panel panel-danger" ng-show="list.worstRestaurants.length > 0">
+      <div class="panel-heading"><i class="fa fa-ambulance"></i> Dirtiest Restaurants</div>
+      <div class="panel-body">
+        <p><small>(Score) Restaurant Name</small></p>
+        <ul class="list-group">
+          <li class="list-group-item" ng-repeat="restaurant in list.worstRestaurants  | orderBy:'-score'">
+            <div restaurant-item restaurant="restaurant"></div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+</div>
