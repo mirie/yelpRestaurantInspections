@@ -52,7 +52,7 @@ if (app.get('env') === 'development') {
   app.use(express.static(path.join(__dirname, '../client/src')));
 
   app.use('/api/yelp', yelpApi);
-  app.use('/socrata', socrataApi);
+  app.use('/api/socrata', socrataApi);
 
   // Error Handling
   app.use(function(err, req, res, next) {
@@ -72,7 +72,7 @@ if (app.get('env') === 'production') {
   // changes it to use the optimized version for production
   app.use(express.static(path.join(__dirname, '/dist')));
   app.use('/api/yelp', yelpApi);
-  app.use('/socrata', socrataApi);
+  app.use('/api/socrata', socrataApi);
 
   // production error handler
   // no stacktraces leaked to user
