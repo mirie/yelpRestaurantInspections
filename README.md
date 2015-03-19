@@ -34,6 +34,18 @@ There are two pages of interest:
   - `cd server`
   - Create a new file named 'yelpConfig.js', and add your Yelp API token/keys so that it looks like this: https://gist.github.com/mirie/30d35b88906f8b9c96b8
  
+### Setup
+There's both the client and the server applications. They have different requirements.
+
+#### Download the server application dependencies
+1. `cd server`
+2. `npm install`
+
+#### Download the client application dependencies
+1. `cd client`
+2. `npm install`
+3. `bower install`
+
 
 ## Running the Application Locally
 You will need start the nodeJS server in order to run the application.
